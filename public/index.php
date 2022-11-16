@@ -29,7 +29,7 @@ if (defined('WMCLOUD_BOOT_APP_DIR')) {
 
     $spiRegistry = $container->get("spiRegistry");
     (function () use ($spiRegistry) {
-        require(WMCLOUD_BOOT_APP_DIR . '/config/spiRegister.php');
+        require(WMCLOUD_BOOT_APP_DIR . '/config/spiRegistry.php');
     })();
 
     $msgSubscription = $container->get("msgSubscription");

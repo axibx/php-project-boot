@@ -2,8 +2,8 @@
 
 namespace WeimobCloudBoot\Boot;
 
+use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Slim\App;
 use Slim\Container;
@@ -42,7 +42,9 @@ class Bootstrap
             $logger = new WeimobCloudLogger($applicationName ?? "weimob-cloud-boot-default");
 
             //控制台输出
-            $logger->pushHandler(new StreamHandler('php://stdout', $envUtil->getLogLevel()));
+            $stream = new StreamHandler('php://stdout', $envUtil->getLogLevel());
+            $stream->setFormatter(new LineFormatter("{\"appId\":\"%channel%\",\"log_time\":\"%datetime%\",\"logType\":\"app_php\",\"level\":\"%level_name%\",\"message\":\"%message% %context% %extra%\"}\n"));
+            $logger->pushHandler($stream);
 
             // 异常捕获
             $logger->setExceptionHandler(function (\Exception $e, array $record) {
