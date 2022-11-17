@@ -12,6 +12,7 @@ class RedisTest extends BaseTestCase
     public static function setUpBeforeClass() {
         $_SERVER['redis_host'] = 'localhost';
         $_SERVER['redis_port'] = '6379';
+        $_SERVER['redis_password'] = 'test1234';
     }
 
     public function testRedisFactory() {

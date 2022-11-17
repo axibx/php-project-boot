@@ -9,8 +9,10 @@ use Slim\App;
 use Slim\Container;
 use WeimobCloudBoot\Ability\Msg\MsgSubscription;
 use WeimobCloudBoot\Ability\Spi\SpiRegistry;
+use WeimobCloudBoot\Component\Encryption\DataSecurity;
 use WeimobCloudBoot\Component\Http\HttpClientWrapper;
 use WeimobCloudBoot\Component\Log\WeimobCloudLogger;
+use WeimobCloudBoot\Component\Oauth\AccessToken;
 use WeimobCloudBoot\Component\Store\PDOFactory;
 use WeimobCloudBoot\Component\Store\RedisFactory;
 use WeimobCloudBoot\Controller\HealthCheckController;
@@ -19,12 +21,9 @@ use WeimobCloudBoot\Controller\WosMsgController;
 use WeimobCloudBoot\Controller\WosSpiController;
 use WeimobCloudBoot\Controller\XinyunMsgController;
 use WeimobCloudBoot\Controller\XinyunSpiController;
-use WeimobCloudBoot\Daemon\Registry\IntervalTimerRegistry;
 use WeimobCloudBoot\Util\ApolloUtil;
 use WeimobCloudBoot\Util\EnvUtil;
 use WeimobCloudBoot\Util\ObjectConvertUtil;
-use WeimobCloudBoot\Component\Oauth\AccessToken;
-use WeimobCloudBoot\Component\Encryption\DataSecurity;
 
 class Bootstrap
 {
@@ -96,11 +95,7 @@ class Bootstrap
             "/health_check",
             HealthCheckController::class . ':handle'
         );
-        // TokenController
-        $app->get(
-            "/token",
-            TokenController::class . ':handle'
-        );
+
         //wos spi入口
         $app->post(
             "/weimob/cloud/spi/{beanName}",

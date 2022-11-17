@@ -12,13 +12,14 @@ class PDOFactory extends BaseFramework
      * @param $port
      * @param $username
      * @param $password
+     * @param $dbname
      * @param $options
      * @return PDO
      */
-    public function buildMySQLInstance($host, $port, $username, $password, $options): PDO
+    public function buildMySQLInstance($host, $port, $username, $password, $dbname, $options): PDO
     {
         return new PDO(
-            'mysql:host=' . $host . ';port=' . $port,
+            'mysql:host=' . $host . ';port=' . $port . ';dbname='. $dbname,
             $username,
             $password,
             $options
@@ -43,10 +44,11 @@ class PDOFactory extends BaseFramework
         $port = $env->get('mysql.port');
         $username = $env->get('mysql.username');
         $password = $env->get('mysql.password');
+        $dbname = $env->get('mysql.dbname');
         $options = [
             PDO::MYSQL_ATTR_INIT_COMMAND => 'set names ' . $charset
         ];
 
-        return $this->buildMySQLInstance($host, $port, $username, $password, $options);
+        return $this->buildMySQLInstance($host, $port, $username, $password, $dbname, $options);
     }
 }
