@@ -18,7 +18,7 @@
 	* Apollo封装
 
 ### 项目结构
-	
+
 ```
 |-- composer.json
 |-- README.md
@@ -72,6 +72,7 @@
 	-- 后台启动
 	php -d variables_order=EGPCS -S localhost:18888 -t ../public ../public/index.php
 	``` 
+4. 生产环境运行，可以在微盟云开发平台进行构建镜像，并发布到容器集群
 
 ## 使用文档
 * [能力文档](http://doc.weimobcloud.com/list?tag=2396&menuId=19&childMenuId=1&isold=2)
