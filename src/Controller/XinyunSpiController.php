@@ -2,7 +2,7 @@
 
 namespace WeimobCloudBoot\Controller;
 
-use Karriere\JsonDecoder\JsonDecoder;
+use JsonMapper;
 use ReflectionClass;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -16,7 +16,7 @@ class XinyunSpiController extends BaseFramework
 {
     public function handle(Request $request, Response $response, array $args){
         $beanName = $args['serviceName'];
-        $methodName= SpecTypeEnum::XINYUN_METHOD_NAME;
+        $methodName= SpecTypeEnum::XINYUN_SPI_METHOD_NAME;
 
         $pidStr = $request->getHeader('saas-pid');
         if(count($pidStr)>0){
@@ -40,9 +40,8 @@ class XinyunSpiController extends BaseFramework
         $parameters = $method->getParameters();
         $parameterType = $parameters[0]->getType();
 
-        $jsonDecoder = new JsonDecoder();
-        $jsonDecoder->scanAndRegister($parameterType);
-        $tempObj = $jsonDecoder->decode($spiBody,$parameterType);
+        $jsonDecoder = new JsonMapper();
+        $tempObj = $jsonDecoder->map(json_decode($spiBody),new $parameterType());
 
         if (!empty($pidStr) && is_numeric($pidStr)) {
             $pid = (int)$pidStr;

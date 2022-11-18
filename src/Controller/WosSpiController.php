@@ -2,7 +2,7 @@
 
 namespace WeimobCloudBoot\Controller;
 
-use Karriere\JsonDecoder\JsonDecoder;
+use JsonMapper;
 use ReflectionClass;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -17,7 +17,7 @@ class WosSpiController extends BaseFramework
 {
     public function handle(Request $request, Response $response, array $args){
         $beanName = $args['beanName'];
-        $methodName= SpecTypeEnum::WOS_METHOD_NAME;
+        $methodName= SpecTypeEnum::WOS_SPI_METHOD_NAME;
 
         $spiRegistry = $this->getContainer()->get("spiRegistry");
 
@@ -41,9 +41,8 @@ class WosSpiController extends BaseFramework
 
         $tempArray = (array)json_decode(json_encode($spiBody));
 
-        $jsonDecoder = new JsonDecoder();
-        $jsonDecoder->scanAndRegister($parameterType);
-        $tempObj = $jsonDecoder->decode($spiBody,$parameterType);
+        $jsonDecoder = new JsonMapper();
+        $tempObj = $jsonDecoder->map(json_decode($spiBody),new $parameterType());
 
         //$params = $tempArray['params'];
 

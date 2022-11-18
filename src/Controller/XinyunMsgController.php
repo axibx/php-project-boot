@@ -2,7 +2,7 @@
 
 namespace WeimobCloudBoot\Controller;
 
-use Karriere\JsonDecoder\JsonDecoder;
+use JsonMapper;
 use ReflectionClass;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -17,9 +17,9 @@ class XinyunMsgController extends BaseFramework
     public function handle(Request $request, Response $response, array $args){
         $msgBody = $request->getParsedBody();
 
-        $jsonDecoder = new JsonDecoder();
+        $jsonDecoder = new JsonMapper();
         /** @var XinyunOpenMessage $xinyunOpenMessage */
-        $xinyunOpenMessage = $jsonDecoder->decode(json_encode($msgBody), XinyunOpenMessage::class);
+        $xinyunOpenMessage = $jsonDecoder->map($msgBody, new XinyunOpenMessage());
         $msgInfo = new MsgInfo($xinyunOpenMessage->getTopic(), $xinyunOpenMessage->getEvent());
 
         $specType = $xinyunOpenMessage->getSpecsType();
@@ -49,9 +49,8 @@ class XinyunMsgController extends BaseFramework
 
         $busiParamType = $ref->getConstant("classType");
 
-        $jsonDecoder = new JsonDecoder();
-        $jsonDecoder->scanAndRegister($busiParamType);
-        $busiParamInstance = $jsonDecoder->decode($msgBodyStr, $busiParamType);
+        $jsonDecoder = new JsonMapper();
+        $busiParamInstance = $jsonDecoder->map(json_decode($msgBodyStr), new $busiParamType());
         $paramInstance->setId($xinyunOpenMessage->getId());
         $paramInstance->setTopic($xinyunOpenMessage->getTopic());
         $paramInstance->setEvent($xinyunOpenMessage->getEvent());

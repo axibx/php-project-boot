@@ -13,10 +13,6 @@ class SpiRegistry extends BaseFramework
     use AbilityRemoteRegistry;
 	private $beanPool = [];
 
-    function __autoload($class_name) {
-        require_once $class_name . '.php';
-    }
-
 	public function register($spiInfo, $class, $spiVersion = null): void
     {
         if($this->existSpi($spiInfo,$spiVersion))
@@ -72,9 +68,9 @@ class SpiRegistry extends BaseFramework
         }
 
         if($spiVersion === null or $spiVersion === SpecTypeEnum::WOS){
-            $methodName = SpecTypeEnum::WOS_METHOD_NAME;
+            $methodName = SpecTypeEnum::WOS_SPI_METHOD_NAME;
         }else{
-            $methodName = SpecTypeEnum::XINYUN_METHOD_NAME;
+            $methodName = SpecTypeEnum::XINYUN_SPI_METHOD_NAME;
         }
 
         $ref = new ReflectionClass($class);
@@ -143,7 +139,7 @@ class SpiRegistry extends BaseFramework
                 $spiRegistryInfoDTO->setInterfaceName(substr($spiInterface,$pos+1));
             }
         }
-        $spiRegistryInfoDTO->setMethodName(SpecTypeEnum::XINYUN_METHOD_NAME);
+        $spiRegistryInfoDTO->setMethodName(SpecTypeEnum::XINYUN_SPI_METHOD_NAME);
         $spiRegistryInfoDTO->setSpiBelongType($spiVersion);
 
         $registryDTO = new RegistryDTO();

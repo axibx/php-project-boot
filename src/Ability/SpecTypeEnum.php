@@ -6,14 +6,14 @@ class SpecTypeEnum
 {
     const XINYUN = 1;
     const WOS = 2;
-    const WOS_METHOD_NAME = "invoke";
-    const XINYUN_METHOD_NAME = "excute";
+    const WOS_SPI_METHOD_NAME = "invoke";
+    const XINYUN_SPI_METHOD_NAME = "execute";
 
-    const WOS_SPI_INTERFACE_CLASS_PACKAGE = 'WeimobCloudBoot\Com\Weimob\Cloud\Spi';
-    const XINYUN_SPI_INTERFACE_CLASS_PACKAGE = 'WeimobCloudBoot\Com\Weimob\Cloud\Spi';
+    const WOS_SPI_INTERFACE_CLASS_PACKAGE = 'Weimob\Wos\Cloud\Spi';
+    const XINYUN_SPI_INTERFACE_CLASS_PACKAGE = 'Weimob\Xinyun\Cloud\Spi';
 
-    const WOS_MSG_INTERFACE_CLASS_PACKAGE = 'WeimobCloudBoot\Com\Weimob\Cloud\Msg';
-    const XINYUN_MSG_INTERFACE_CLASS_PACKAGE = 'WeimobCloudBoot\Com\Weimob\Cloud\Msg';
+    const WOS_MSG_INTERFACE_CLASS_PACKAGE = 'Weimob\Wos\Cloud\Msg';
+    const XINYUN_MSG_INTERFACE_CLASS_PACKAGE = 'Weimob\Xinyun\Cloud\Msg';
 
     const MSG_METHOD_NAME='onMessage';
 

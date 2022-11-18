@@ -2,7 +2,6 @@
 
 namespace WeimobCloudBoot\Ability\Spi;
 
-use Com\Youzan\Cloud\Extension\Param\DeliveryToWechatProcessRequestDTO\ItemInfoParam;
 use WeimobCloudBoot\Ability\Msg\MessageRegistryInfoDTO;
 
 class RegistryDTO implements \JsonSerializable

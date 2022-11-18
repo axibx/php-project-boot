@@ -2,7 +2,7 @@
 
 namespace WeimobCloudBoot\Controller;
 
-use Karriere\JsonDecoder\JsonDecoder;
+use JsonMapper;
 use ReflectionClass;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -18,9 +18,9 @@ class WosMsgController extends BaseFramework
     public function handle(Request $request, Response $response, array $args){
         $msgBody = $request->getParsedBody();
 
-        $jsonDecoder = new JsonDecoder();
+        $jsonDecoder = new JsonMapper();
         /** @var WosOpenMessage $wosOpenMessage */
-        $wosOpenMessage = $jsonDecoder->decode(json_encode($msgBody), WosOpenMessage::class);
+        $wosOpenMessage = $jsonDecoder->map($msgBody, new WosOpenMessage());
         $msgInfo = new MsgInfo($wosOpenMessage->getTopic(), $wosOpenMessage->getEvent());
 
         $specType = $wosOpenMessage->getSpecsType();
@@ -49,9 +49,8 @@ class WosMsgController extends BaseFramework
 
         $busiParamType = $ref->getConstant("classType");
 
-        $jsonDecoder = new JsonDecoder();
-        $jsonDecoder->scanAndRegister($busiParamType);
-        $busiParamInstance = $jsonDecoder->decode($msgBodyStr, $busiParamType);
+        $jsonDecoder = new JsonMapper();
+        $busiParamInstance = $jsonDecoder->map(json_decode($msgBodyStr), new $busiParamType());
         $paramInstance->setId($wosOpenMessage->getId());
         $paramInstance->setTopic($wosOpenMessage->getTopic());
         $paramInstance->setEvent($wosOpenMessage->getEvent());
