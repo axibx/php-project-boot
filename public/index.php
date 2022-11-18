@@ -27,6 +27,10 @@ if (defined('WMCLOUD_BOOT_APP_DIR')) {
     })();
 
 
+}
+$registered = getAndSetRegistered();
+if(empty($registered)) {
+
     $spiRegistry = $container->get("spiRegistry");
     (function () use ($spiRegistry) {
         require(WMCLOUD_BOOT_APP_DIR . '/config/spiRegistry.php');
@@ -49,4 +53,20 @@ try {
     $app->run();
 } catch (Exception $e) {
     // do something
+}
+
+function getAndSetRegistered():bool
+{
+    $shm_key = 0;
+    $shm_id = @shmop_open($shm_key, 'c', 0644, 32);
+//读取并写入数据
+    $data = shmop_read($shm_id, 0, 32);
+    $data = trim($data);
+    if(!empty($data)){
+        return true;
+    }
+    shmop_write($shm_id, "true", 0);
+//关闭内存块，并不会删除共享内存，只是清除 PHP 的资源
+    shmop_close($shm_id);
+    return false;
 }
