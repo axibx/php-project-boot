@@ -9,11 +9,11 @@ class SpecTypeEnum
     const WOS_SPI_METHOD_NAME = "invoke";
     const XINYUN_SPI_METHOD_NAME = "execute";
 
-    const WOS_SPI_INTERFACE_CLASS_PACKAGE = 'Weimob\Wos\Cloud\Spi';
-    const XINYUN_SPI_INTERFACE_CLASS_PACKAGE = 'Weimob\Xinyun\Cloud\Spi';
+    const WOS_SPI_INTERFACE_CLASS_PACKAGE = 'WeimobAbility\Weimob\Wos\Cloud\Spi';
+    const XINYUN_SPI_INTERFACE_CLASS_PACKAGE = 'WeimobAbility\Weimob\Xinyun\Cloud\Spi';
 
-    const WOS_MSG_INTERFACE_CLASS_PACKAGE = 'Weimob\Wos\Cloud\Msg';
-    const XINYUN_MSG_INTERFACE_CLASS_PACKAGE = 'Weimob\Xinyun\Cloud\Msg';
+    const WOS_MSG_INTERFACE_CLASS_PACKAGE = 'WeimobAbility\Weimob\Wos\Cloud\Msg';
+    const XINYUN_MSG_INTERFACE_CLASS_PACKAGE = 'WeimobAbility\Weimob\Xinyun\Cloud\Msg';
 
     const MSG_METHOD_NAME='onMessage';
 
