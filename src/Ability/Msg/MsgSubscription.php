@@ -3,6 +3,7 @@
 namespace WeimobCloudBoot\Ability\Msg;
 
 use ReflectionClass;
+use ReflectionException;
 use WeimobCloudBoot\Ability\AbilityRemoteRegistry;
 use WeimobCloudBoot\Ability\SpecTypeEnum;
 use WeimobCloudBoot\Ability\Spi\RegistryDTO;
@@ -38,11 +39,11 @@ class MsgSubscription extends BaseFramework
         $this->beanPool[$this->getMsgKey($msgInfo,$msgVersion)] = ["msgInfo"=>$msgInfo,"instanceClass"=>$class,"msgVersion"=>$msgVersion];
     }
 
-    public function getMsg($msgInfo, $msgVersion = null): BaseFramework
+    public function getMsg($msgInfo, $msgVersion = null): ?BaseFramework
     {
         if(!$this->existMsg($msgInfo,$msgVersion))
         {
-            throw new BeanRegisterException("this msg maybe not impl");
+            return null;
         }
         $msg = $this->beanPool[$this->getMsgKey($msgInfo,$msgVersion)];
         $class = $msg["instanceClass"];
@@ -80,7 +81,13 @@ class MsgSubscription extends BaseFramework
         $methodName = SpecTypeEnum::MSG_METHOD_NAME;
 
         $ref = new ReflectionClass($class);
-        $method = $ref->getMethod($methodName);
+        try
+        {
+            $method = $ref->getMethod($methodName);
+        }catch (ReflectionException $ex)
+        {
+            throw new BeanRegisterException("method is not exist(msg impl is $class, method name is $methodName)");
+        }
         if(empty($method)){
             return false;
         }
@@ -101,20 +108,30 @@ class MsgSubscription extends BaseFramework
     private function getSpiInterface($class, $spiVersion): ?string
     {
         $interfaceArray = class_implements($class);
+        if($interfaceArray === false)
+        {
+            throw new BeanRegisterException("msg impl class $class not implement msg interface");
+        }
         if($spiVersion === null or $spiVersion === SpecTypeEnum::WOS){
             $interfacePath = SpecTypeEnum::WOS_MSG_INTERFACE_CLASS_PACKAGE;
         }else{
             $interfacePath = SpecTypeEnum::XINYUN_MSG_INTERFACE_CLASS_PACKAGE;
         }
 
+        $isPathValid = false;
+        $msgInterface = null;
         foreach ($interfaceArray as $key=>$value)
         {
             if(strncmp($interfacePath, $key, strlen($interfacePath))===0)
             {
-                return $key;
+                $isPathValid = true;
+                $msgInterface = $key;
             }
         }
-        return null;
+        if(!$isPathValid){
+            throw new BeanRegisterException("msg impl class $class not implement  msg interface of weimob sdk");
+        }
+        return $msgInterface;
     }
 
     private function registerServiceInfo($msgInfo, $class, $spiVersion)

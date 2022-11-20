@@ -22,7 +22,9 @@ use WeimobCloudBoot\Controller\WosSpiController;
 use WeimobCloudBoot\Controller\XinyunMsgController;
 use WeimobCloudBoot\Controller\XinyunSpiController;
 use WeimobCloudBoot\Util\ApolloUtil;
+use WeimobCloudBoot\Util\DataSecurityUtil;
 use WeimobCloudBoot\Util\EnvUtil;
+use WeimobCloudBoot\Util\OauthUtil;
 use WeimobCloudBoot\Util\ObjectConvertUtil;
 
 class Bootstrap
@@ -84,6 +86,15 @@ class Bootstrap
         };
         $container['dataDES'] = function (ContainerInterface $container) {
             return new DataSecurity($container);
+        };
+        $container['oauthUtil'] = function (ContainerInterface $container) {
+            return new OauthUtil($container);
+        };
+        $container['dataSecurityUtil'] = function (ContainerInterface $container) {
+            return new DataSecurityUtil($container);
+        };
+        $container['weimobHttpUtil'] = function (ContainerInterface $container) {
+            return new WeimobHttpUtil($container);
         };
         return $container;
     }

@@ -29,11 +29,11 @@ class SpiRegistry extends BaseFramework
         $this->beanPool[$this->getSpiKey($spiInfo,$spiVersion)] = ["spiInfo"=>$spiInfo,"instanceClass"=>$class,"spiVersion"=>$spiVersion];
     }
 
-    public function getSpi($spiInfo, $spiVersion = null): BaseFramework
+    public function getSpi($spiInfo, $spiVersion = null): ?BaseFramework
     {
         if(!$this->existSpi($spiInfo,$spiVersion))
         {
-            throw new BeanRegisterException("this spi maybe not impl");
+            return null;
         }
         $spi = $this->beanPool[$this->getSpiKey($spiInfo,$spiVersion)];
         $class = $spi["instanceClass"];
@@ -74,28 +74,16 @@ class SpiRegistry extends BaseFramework
         }
 
         $ref = new ReflectionClass($class);
-        //todo 异常处理
-        $method = $ref->getMethod($methodName);
+        try
+        {
+            $method = $ref->getMethod($methodName);
+        }catch (\ReflectionException $ex)
+        {
+            throw new BeanRegisterException("method is not exist(spi impl is $class, method name is $methodName)");
+        }
         if(empty($method)){
             return false;
         }
-
-        /*
-        $parameters = $method->getParameters();
-        $parameterType = $parameters[0]->getType();
-
-        if($spiVersion === null or $spiVersion === SpecTypeEnum::WOS) {
-            if (!$parameterType instanceof PaasRequest)
-            {
-                return false;
-            }
-        }else{
-            if (!$parameterType instanceof CommonRequestVo)
-            {
-                return false;
-            }
-        }
-        */
 
         return true;
     }
@@ -109,20 +97,31 @@ class SpiRegistry extends BaseFramework
     private function getSpiInterface($class, $spiVersion): ?string
     {
         $interfaceArray = class_implements($class);
+        if($interfaceArray === false)
+        {
+            throw new BeanRegisterException("spi impl class $class not implement spi interface");
+        }
         if($spiVersion === null or $spiVersion === SpecTypeEnum::WOS){
             $interfacePath = SpecTypeEnum::WOS_SPI_INTERFACE_CLASS_PACKAGE;
         }else{
             $interfacePath = SpecTypeEnum::XINYUN_SPI_INTERFACE_CLASS_PACKAGE;
         }
 
+        $isPathValid = false;
+        $spiInterface = null;
         foreach ($interfaceArray as $key=>$value)
         {
             if(strncmp($interfacePath, $key, strlen($interfacePath))===0)
             {
-                return $key;
+                $isPathValid = true;
+                $spiInterface = $key;
             }
         }
-        return null;
+        if(!$isPathValid){
+            throw new BeanRegisterException("spi impl class $class not implement  spi interface of weimob sdk");
+        }
+
+        return $spiInterface;
     }
 
     private function registerServiceInfo($spiInfo, $class, $spiVersion)

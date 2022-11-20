@@ -79,13 +79,13 @@ class RegistryDTO implements \JsonSerializable
 
     /**
      * client id
-     * String
+     * @var string
      */
     private $clientId;
 
     /**
      * spi service实现的信息
-     * List<SpiRegistryInfoDTO>
+     * @var array[SpiRegistryInfoDTO]
      */
     private $interfacePathVos;
 

@@ -6,13 +6,13 @@ class WosSpiExporterRequest implements \JsonSerializable
 {
     /**
      * 签名
-     * String
+     * @var string
      */
     private $sign;
 
     /**
      * 发送方时间戳，验签的时候使用
-     * String
+     * @var string
      */
     private $timestamp;
 
@@ -42,7 +42,7 @@ class WosSpiExporterRequest implements \JsonSerializable
 
     /**
      * 业务入参,后续需要反序列化
-     * String
+     * @var string
      */
     private $params;
 

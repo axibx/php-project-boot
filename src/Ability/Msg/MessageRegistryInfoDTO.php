@@ -69,19 +69,19 @@ class MessageRegistryInfoDTO implements \JsonSerializable
     }
     /**
      * client id
-     * String
+     * @var string
      */
     private $clientId;
 
     /**
      * 实现的地址
-     * String
+     * @var string
      */
     private $hostAddress;
 
     /**
      * 访问路径
-     * String
+     * @var string
      */
     private $path;
 

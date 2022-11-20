@@ -3,6 +3,9 @@
 namespace WeimobCloudBoot\Ability;
 
 use WeimobCloudBoot\Ability\Spi\RegistryDTO;
+use WeimobCloudBoot\Component\Http\HttpClientWrapper;
+use WeimobCloudBoot\Exception\BeanRegisterException;
+use WeimobCloudBoot\Facade\LogFacade;
 
 trait AbilityRemoteRegistry
 {
@@ -11,6 +14,10 @@ trait AbilityRemoteRegistry
         /** @var \WeimobCloudBoot\Util\EnvUtil $envUtil */
         $envUtil = $this->getContainer()->get("envUtil");
         $clientInfos = $envUtil->getClientInfos();
+        if(empty($clientInfos))
+        {
+            throw new BeanRegisterException("client info is null");
+        }
         foreach ($clientInfos as $key=>$val)
         {
             $messageExtensionDto = $registryDTO->getMessageExtensionDTO();
@@ -46,8 +53,18 @@ trait AbilityRemoteRegistry
 
         $myArray = ["sign"=>$sign, "timestamp"=>$timestamp, "clientId"=>$clientId, "appId"=>$appId, "env"=>$env, "params"=>$param];
 
+        /** @var HttpClientWrapper $client */
         $client = $this->getContainer()->get('httpClient');
-        $r = $client->post($postUrl, null, json_encode($myArray));
-        $response = $r->getBody();
+        $myArrayJsonStr = json_encode($myArray);
+        try {
+            LogFacade::info("注册信息: $myArrayJsonStr");
+            $r = $client->post($postUrl, null, json_encode($myArray));
+            $response = $r->getBody();
+            LogFacade::info("注册返回信息：$response");
+        }catch (\Throwable $ex){
+            LogFacade::info("注册容器信息失败。");
+            throw new BeanRegisterException("注册容器信息失败");
+        }
+
     }
 }

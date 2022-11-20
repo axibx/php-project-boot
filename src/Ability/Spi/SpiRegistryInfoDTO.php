@@ -97,19 +97,19 @@ class SpiRegistryInfoDTO implements \JsonSerializable
 
     /**
      * spi接口的简单类名，如：OrderService
-     * String
+     * @var string
      */
     private $interfaceName;
 
     /**
      * spring 容器中的bean name
-     * String
+     * @var string
      */
     private $beanName;
 
     /**
      * 方法名
-     * String
+     * @var string
      */
     private $methodName;
 
