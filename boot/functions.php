@@ -63,7 +63,6 @@ function initAbility(ContainerInterface $container): AbilityRegistryWrapper{
         }catch (Throwable $exception){
             LogFacade::info(sprintf("共享内存获取值,值为:%s",$exception->getMessage()));
         }
-        LogFacade::info(sprintf("能力注册结果: %s",$registered));
         if (empty($registered)) {
             LogFacade::info("开始注册能力");
             $spiRegistry = $container->get("spiRegistry");
@@ -110,9 +109,7 @@ function getAndSetRegistered():bool
     $shm_id = shmop_open($shm_key, 'c', 0644, 32);
     //读取并写入数据
     $data = shmop_read($shm_id, 0, 32);
-    LogFacade::info(sprintf("读取到共享内存,原始数据为%s",$data));
     $data = trim($data);
-    LogFacade::info(sprintf("读取到共享内存,trim数据为%s,%s",$data,empty($data)));
     if(!empty($data)){
         return true;
     }
