@@ -3,6 +3,7 @@
 use Psr\Container\ContainerInterface;
 use \Slim\App;
 use WeimobCloudBoot\Ability\AbilityRegistryWrapper;
+use WeimobCloudBoot\Facade\LogFacade;
 
 function initEnv()
 {
@@ -58,8 +59,9 @@ function initFrameConfig(App $app)
 function initAbility(ContainerInterface $container): AbilityRegistryWrapper{
     if (defined('WMCLOUD_BOOT_APP_DIR')) {
         $registered = getAndSetRegistered();
+        LogFacade::info(sprintf("能力注册结果: %s",$registered));
         if (empty($registered)) {
-
+            LogFacade::info("开始注册能力");
             $spiRegistry = $container->get("spiRegistry");
             (function () use ($spiRegistry) {
                 require(WMCLOUD_BOOT_APP_DIR . '/config/spiRegistry.php');
@@ -69,6 +71,7 @@ function initAbility(ContainerInterface $container): AbilityRegistryWrapper{
             (function () use ($msgSubscription) {
                 require(WMCLOUD_BOOT_APP_DIR . '/config/msgSubscription.php');
             })();
+            LogFacade::info("结束注册能力");
 
             $wrapper = new AbilityRegistryWrapper();
             $wrapper->spiRegistry = $spiRegistry;

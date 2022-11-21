@@ -4,6 +4,7 @@ namespace WeimobCloudBoot\Util;
 
 use WeimobCloudBoot\Boot\BaseFramework;
 use WeimobCloudBoot\Component\Oauth\AccessToken;
+use WeimobCloudBoot\Exception\OauthException;
 
 class OauthUtil extends BaseFramework
 {
@@ -72,7 +73,7 @@ class OauthUtil extends BaseFramework
         $accessToken = $this->getContainer()->get('accessToken');
         $accessToken->setBaseUrl($baseUrl);
         $accessToken->setClientId($clientInfo[$clientName]["clientId"]);
-        $accessToken->setClientId($clientInfo[$clientName]["clientSecret"]);
+        $accessToken->setClientSecret($clientInfo[$clientName]["clientSecret"]);
 
         return $accessToken;
     }
